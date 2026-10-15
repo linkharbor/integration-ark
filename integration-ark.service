@@ -1,0 +1,20 @@
+# systemd unit — copy to /etc/systemd/system/integration-ark.service,
+# put the secrets into /etc/integration-ark.env (chmod 600):
+#   LH_INGEST_URL=https://dock.at-harbor.com/v1/ingest/123
+#   LH_INGEST_SECRET=…
+#   ARK_RCON_PASSWORD=…
+[Unit]
+Description=LinkHarbor ARK agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/integration-ark.env
+ExecStart=/usr/bin/python3 /opt/integration-ark/agent.py --host 127.0.0.1 --port 27020 --name "The Island PvE" --players-max 70 --address "203.0.113.10:7777" --url "https://discord.gg/xyz"
+Restart=always
+RestartSec=10
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
